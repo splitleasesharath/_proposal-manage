@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Management - Preview Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #4f46e5;
+            --color-primary-hover: #4338ca;
+            --color-secondary: #8b5cf6;
+            --color-secondary-hover: #7c3aed;
+            --color-danger: #ef4444;
+            --color-danger-hover: #dc2626;
+            --color-success: #10b981;
+            --color-border: #e5e7eb;
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-600: #4b5563;
+            --color-gray-700: #374151;
+            --color-gray-900: #111827;
+            --color-white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            background-color: var(--color-gray-50);
+            color: var(--color-gray-900);
+        }
+
+        .page-header {
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+            padding: 24px 0;
+            margin-bottom: 24px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-gray-900);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--color-secondary);
+            border: 2px solid var(--color-secondary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-white);
+        }
+
+        .btn-white {
+            background-color: var(--color-white);
+            color: var(--color-gray-700);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-white:hover {
+            background-color: var(--color-gray-50);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .filter-section {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .filter-row {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-row-1 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .filter-row-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .filter-row-3 {
+            grid-template-columns: 1fr auto;
+            align-items: flex-end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-gray-700);
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .proposal-item {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .proposal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-gray-900);
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--color-gray-200);
+            padding-bottom: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .profile-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-border);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--color-gray-900);
+            margin-bottom: 4px;
+        }
+
+        .user-contact {
+            font-size: 14px;
+            color: var(--color-gray-600);
+            margin-bottom: 2px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            background-color: #dbeafe;
+            color: #1e40af;
+            margin-left: 8px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .pricing-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background-color: var(--color-gray-50);
+            border-radius: 4px;
+        }
+
+        .pricing-label {
+            font-size: 13px;
+            color: var(--color-gray-700);
+        }
+
+        .pricing-value {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--color-gray-900);
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .day-cell {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-gray-600);
+            background-color: var(--color-white);
+        }
+
+        .day-cell.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .btn-link {
+            background: transparent;
+            color: var(--color-primary);
+            text-decoration: underline;
+            padding: 10px 16px;
+        }
+
+        .btn-link:hover {
+            color: var(--color-primary-hover);
+        }
+
+        .btn-action {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-action:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: var(--color-white);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-secondary-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--color-danger-hover);
+        }
+
+        .listing-photos {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .listing-photo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--color-border);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: var(--color-gray-700);
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--color-gray-900);
+        }
+
+        .demo-notice {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 24px;
+            text-align: center;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .demo-notice a {
+            color: white;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .filter-row-1 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-row-1,
+            .filter-row-2,
+            .filter-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">Proposals: RG: Proposals's List of Proposals: 5 results</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="alert('Create Proposal wizard would open here')">Create Suggested Proposal</button>
+                <button class="btn btn-outline" onclick="alert('Navigate to relationships page')">Go to relationships</button>
+                <button class="btn btn-white" onclick="alert('Change Prices functionality')">Change Prices</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Demo Notice -->
+        <div class="demo-notice">
+            📋 This is a static HTML preview of the Proposal Management System.
+            For the full interactive version, run <code>npm run dev</code> in the repository.
+            <br>
+            <a href="https://github.com/splitleasesharath/_proposal-manage" target="_blank">View on GitHub →</a>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-row filter-row-1">
+                <div class="filter-item">
+                    <input type="text" placeholder="Search Guest Name, email, phone number">
+                </div>
+                <div class="filter-item">
+                    <input type="text" placeholder="Search Host Name, email, phone number">
+                </div>
+                <div class="filter-item">
+                    <select>
+                        <option>Filter by proposal status</option>
+                        <option>Host Review</option>
+                        <option>Proposal Submitted by guest - Awaiting Rental Application</option>
+                        <option>Host Counteroffer Submitted / Awaiting Guest Review</option>
+                        <option>Lease Documents Sent for Signatures</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">Sort by Proposal Modified Date</label>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-white" style="flex: 1;">↑</button>
+                        <button class="btn btn-primary" style="flex: 1;">↓</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-row filter-row-2">
+                <div class="filter-item">
+                    <label class="filter-label">Filter by Proposal unique ID</label>
+                    <input type="text" placeholder="search by ID">
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">Filter by listing (name, rental type, unique id)</label>
+                    <input type="text" placeholder="Search Listing by name, unique id, rental type">
+                </div>
+            </div>
+
+            <div class="filter-row filter-row-3">
+                <div class="filter-item">
+                    <label class="filter-label">Display Proposal Modified Between Dates:</label>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <input type="date" style="flex: 1;">
+                        <span>-</span>
+                        <input type="date" style="flex: 1;">
+                    </div>
+                </div>
+                <button class="btn btn-white">Clear all</button>
+            </div>
+        </div>
+
+        <!-- Proposal Item 1 -->
+        <div class="proposal-item">
+            <div class="proposal-grid">
+                <!-- Guest Section -->
+                <div>
+                    <h3 class="section-title">Guest Information</h3>
+                    <div class="user-info">
+                        <img src="https://i.pravatar.cc/150?img=1" alt="Emily Rodriguez" class="profile-photo">
+                        <div>
+                            <p class="user-name">Emily Rodriguez <span class="badge">Usability Tester</span></p>
+                            <p class="user-contact">emily.rodriguez@example.com</p>
+                            <p class="user-contact">+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px; padding: 12px; background: var(--color-gray-50); border-radius: 6px;">
+                        <p style="font-size: 13px; color: var(--color-gray-600);">Software engineer looking for a quiet place to work remotely. I enjoy reading, hiking, and cooking.</p>
+                    </div>
+                </div>
+
+                <!-- Listing Section -->
+                <div>
+                    <h3 class="section-title">Listing Information</h3>
+                    <p style="font-weight: 600; margin-bottom: 8px;">Modern Downtown Apartment</p>
+                    <p style="font-size: 14px; color: var(--color-gray-600); margin-bottom: 4px;">123 Main Street, Unit 4B, San Francisco, CA 94102</p>
+                    <p style="font-size: 12px; color: var(--color-gray-500); font-family: monospace;">ID: LIST-2026-A101</p>
+                    <div class="listing-photos">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400" alt="Listing" class="listing-photo">
+                        <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400" alt="Listing" class="listing-photo">
+                    </div>
+                </div>
+
+                <!-- Host Section -->
+                <div>
+                    <h3 class="section-title">Host Information</h3>
+                    <div class="user-info">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="Michael Chen" class="profile-photo">
+                        <div>
+                            <p class="user-name">Michael Chen</p>
+                            <p class="user-contact">michael.chen@example.com</p>
+                            <p class="user-contact">+1 (555) 987-6543</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Section -->
+                <div>
+                    <h3 class="section-title">Pricing</h3>
+                    <div class="pricing-grid">
+                        <div class="pricing-item">
+                            <span class="pricing-label">Nightly Price:</span>
+                            <span class="pricing-value">$85.00</span>
+                        </div>
+                        <div class="pricing-item">
+                            <span class="pricing-label">Total Reservation:</span>
+                            <span class="pricing-value">$2,380.00</span>
+                        </div>
+                        <div class="pricing-item">
+                            <span class="pricing-label">Damage Deposit:</span>
+                            <span class="pricing-value">$1,500.00</span>
+                        </div>
+                        <div class="pricing-item">
+                            <span class="pricing-label">Cleaning Cost:</span>
+                            <span class="pricing-value">$150.00</span>
+                        </div>
+                        <div class="pricing-item">
+                            <span class="pricing-label">Host Compensation:</span>
+                            <span class="pricing-value">$2,000.00</span>
+                        </div>
+                        <div class="pricing-item">
+                            <span class="pricing-label">Total Compensation:</span>
+                            <span class="pricing-value">$2,150.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservation Details -->
+                <div>
+                    <h3 class="section-title">Reservation Details</h3>
+                    <div class="info-item">
+                        <span class="info-label">Move-in Date:</span>
+                        <span class="info-value">2/1/2026</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Check-in:</span>
+                        <span class="info-value">2/1/2026</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Check-out:</span>
+                        <span class="info-value">2/28/2026</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Reservation Span:</span>
+                        <span class="info-value">4 weeks</span>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <span class="info-label">Weekly Schedule:</span>
+                        <div class="days-grid">
+                            <div class="day-cell active">S</div>
+                            <div class="day-cell active">M</div>
+                            <div class="day-cell active">T</div>
+                            <div class="day-cell active">W</div>
+                            <div class="day-cell active">T</div>
+                            <div class="day-cell active">F</div>
+                            <div class="day-cell active">S</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Section -->
+                <div>
+                    <h3 class="section-title">Proposal Status</h3>
+                    <select style="width: 100%; margin-bottom: 12px;">
+                        <option selected>Host Review</option>
+                        <option>Proposal Submitted by guest</option>
+                        <option>Host Counteroffer Submitted</option>
+                    </select>
+                    <div class="info-item">
+                        <span class="info-label">Proposal ID:</span>
+                        <span class="info-value" style="font-family: monospace; font-size: 12px;">PROP-2026-001</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Created:</span>
+                        <span class="info-value">1/15/2026</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Modified:</span>
+                        <span class="info-value">1/20/2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-link" onclick="alert('View listing (internal)')">View listing (internal)</button>
+                <button class="btn btn-action" onclick="alert('Modify Terms as Host')">Modify Terms as Host</button>
+                <button class="btn btn-action" onclick="alert('Modify Terms as Guest')">Modify Terms as Guest</button>
+                <button class="btn btn-secondary" onclick="alert('Send reminder to guest')">Send reminder to guest</button>
+                <button class="btn btn-secondary" onclick="alert('Send reminder to host')">Send reminder to host</button>
+                <button class="btn btn-danger" onclick="if(confirm('Cancel this proposal?')) alert('Proposal cancelled')">Cancel Proposal by SplitLease</button>
+            </div>
+        </div>
+
+        <!-- Proposal Item 2 (Condensed) -->
+        <div class="proposal-item">
+            <div class="proposal-grid">
+                <div>
+                    <h3 class="section-title">Guest Information</h3>
+                    <div class="user-info">
+                        <img src="https://i.pravatar.cc/150?img=33" alt="David Kim" class="profile-photo">
+                        <div>
+                            <p class="user-name">David Kim</p>
+                            <p class="user-contact">david.kim@example.com</p>
+                            <p class="user-contact">+1 (555) 234-5678</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="section-title">Listing Information</h3>
+                    <p style="font-weight: 600; margin-bottom: 8px;">Cozy Studio near University</p>
+                    <p style="font-size: 14px; color: var(--color-gray-600);">456 College Avenue, Berkeley, CA 94704</p>
+                </div>
+
+                <div>
+                    <h3 class="section-title">Host Information</h3>
+                    <div class="user-info">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Sarah Johnson" class="profile-photo">
+                        <div>
+                            <p class="user-name">Sarah Johnson <span class="badge">Usability Tester</span></p>
+                            <p class="user-contact">sarah.johnson@example.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="section-title">Pricing</h3>
+                    <div class="pricing-grid">
+                        <div class="pricing-item">
+                            <span class="pricing-label">Nightly Price:</span>
+                            <span class="pricing-value">$60.00</span>
+                        </div>
+                        <div class="pricing-item">
+                            <span class="pricing-label">Total Reservation:</span>
+                            <span class="pricing-value">$2,520.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="section-title">Status</h3>
+                    <select style="width: 100%;">
+                        <option selected>Proposal Submitted by guest - Awaiting Rental Application</option>
+                    </select>
+                    <p style="margin-top: 8px; font-size: 12px; color: var(--color-gray-600);">ID: PROP-2026-002</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-link">View listing (internal)</button>
+                <button class="btn btn-action">Modify Terms as Host</button>
+                <button class="btn btn-secondary">Send reminder to guest</button>
+                <button class="btn btn-danger">Cancel Proposal by SplitLease</button>
+            </div>
+        </div>
+
+        <!-- Info Footer -->
+        <div style="background: var(--color-white); border: 1px solid var(--color-border); border-radius: 8px; padding: 24px; margin-top: 24px; text-align: center;">
+            <h3 style="margin-bottom: 12px; color: var(--color-gray-900);">🚀 Ready to see the full application?</h3>
+            <p style="color: var(--color-gray-600); margin-bottom: 16px;">This preview shows 2 of 5 sample proposals. The full React application includes:</p>
+            <ul style="text-align: left; max-width: 600px; margin: 0 auto 20px; color: var(--color-gray-700);">
+                <li>✅ Real-time filtering and search</li>
+                <li>✅ Interactive proposal creation wizard</li>
+                <li>✅ Status updates with live feedback</li>
+                <li>✅ All 5 sample proposals with complete data</li>
+                <li>✅ Responsive design for all devices</li>
+                <li>✅ Toast notifications and loading states</li>
+            </ul>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="https://github.com/splitleasesharath/_proposal-manage" target="_blank" style="text-decoration: none;">
+                    <button class="btn btn-primary">View on GitHub</button>
+                </a>
+                <button class="btn btn-outline" onclick="alert('To run locally:\n\n1. cd into the repo folder\n2. npm install\n3. npm run dev\n4. Open http://localhost:3000')">Installation Instructions</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px 20px; color: var(--color-gray-600);">
+            <p>Built with ❤️ by Claude Code for Split Lease</p>
+            <p style="font-size: 12px; margin-top: 8px;">Proposal Management System v1.0.0</p>
+        </div>
+    </div>
+</body>
+</html>
